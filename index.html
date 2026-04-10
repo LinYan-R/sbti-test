@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SBTI 风格人格测试（本地版）</title>
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <span>SBTI 风格人格测试</span>
+          <span class="badge">本地测试版</span>
+        </div>
+        <div class="nav">
+          <button class="btn" id="homeBtn" type="button">返回首页</button>
+        </div>
+      </div>
+
+      <div class="panel screen" id="screen_home">
+        <div class="panelInner">
+          <div class="hero">
+            <div class="heroCard">
+              <h1 class="hTitle">MBTI 已经过时，SBTI 来了（本地同款风格）</h1>
+              <p class="hSub">
+                31 题，做完才放行。结果会给出主类型、匹配度、以及 15 维度评分。
+              </p>
+              <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <button class="btn primary" id="startBtn" type="button">开始测试</button>
+                <button class="btn danger" data-action="clear" type="button">清空本地作答</button>
+              </div>
+              <div class="footerNote">
+                本测试仅供娱乐，别拿它当诊断、面试、相亲、分手、招魂、算命或人生判决书。
+              </div>
+            </div>
+            <div class="heroCard">
+              <div class="callout">
+                <div class="dot"></div>
+                <div>
+                  <div style="font-weight:800; color:var(--text); margin-bottom:4px">本地运行说明</div>
+                  <div>
+                    你可以直接双击打开 <span class="muted">web/index.html</span>，或者用 Python 启动本地服务器（推荐）。
+                  </div>
+                </div>
+              </div>
+              <div style="height:10px"></div>
+              <div class="callout">
+                <div class="dot"></div>
+                <div>
+                  <div style="font-weight:800; color:var(--text); margin-bottom:4px">说明</div>
+                  <div>
+                    这是“风格复刻”，题目与计分为自定义实现；你可以随时改 <span class="muted">web/data.js</span> 来贴近你想要的版本。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel screen hidden" id="screen_quiz">
+        <div class="panelInner">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap">
+            <div>
+              <div style="font-weight:900; font-size:18px">0 / 31</div>
+              <div class="muted" style="margin-top:4px">全选完才会放行。世界已经够乱了，起码把题做完整。</div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap">
+              <button class="btn danger" data-action="clear" type="button">清空作答</button>
+            </div>
+          </div>
+        </div>
+        <div class="progressRow">
+          <div class="progress" aria-label="progress">
+            <div class="progressFill" id="progressFill"></div>
+          </div>
+          <div class="count" id="count">0 / 31</div>
+        </div>
+        <div class="panelInner" style="padding-top:0">
+          <p class="gateHint" id="gateHint">还没做完，先别急。</p>
+        </div>
+        <div id="questionList"></div>
+        <div class="quizSubmitBar">
+          <div class="submitLeft">
+            <div class="muted">选完后直接在最下面提交。</div>
+            <div class="submitWarn hidden" id="submitWarn"></div>
+          </div>
+          <button class="btn primary" id="submitBtn" type="button">提交并查看结果</button>
+        </div>
+      </div>
+
+      <div class="panel screen hidden" id="screen_result">
+        <div class="panelInner">
+          <div class="reportGrid">
+            <div class="reportCard">
+              <div class="reportTitle">你的主类型</div>
+              <div class="reportBig">
+                <span id="resultTypeKey">TYPE</span>
+                <span class="rname" id="resultTypeName">（类型名）</span>
+              </div>
+              <div class="muted" style="margin-top:6px" id="resultNote">系统备注会显示在这里。</div>
+              <div class="reportPills">
+                <div class="pill">匹配度 <b id="resultMatch">0%</b></div>
+                <div class="pill">完成度 <b id="resultDone">31/31</b></div>
+              </div>
+              <div class="reportOneLiner" id="resultOneLiner">一句话结论会显示在这里。</div>
+            </div>
+
+            <div class="reportCard">
+              <div class="reportTitle">你的优势 Top3</div>
+              <div class="miniList" id="resultTop"></div>
+              <div class="reportTitle" style="margin-top:14px">你要注意的 Top3</div>
+              <div class="miniList" id="resultBottom"></div>
+            </div>
+          </div>
+
+          <div class="resultHeader hidden" id="legacyHeader">
+            <div>
+              <div class="rtype">完整报告</div>
+            </div>
+            <div class="match">匹配度 <span id="resultMatch">0%</span></div>
+          </div>
+
+          <div class="sectionTitle">该人格的简单解读</div>
+          <div class="muted" style="line-height:1.7" id="resultBlurb"></div>
+
+          <div class="sectionTitle">进一步解读</div>
+          <div class="longText" id="resultLong"></div>
+
+          <div class="sectionTitle">十五维度评分</div>
+          <div class="dimensionGrid" id="dimensionGrid"></div>
+
+          <div class="sectionTitle">友情提示</div>
+          <div class="muted" style="line-height:1.7" id="resultTips"></div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px">
+            <button class="btn primary" id="retryBtn" type="button">重新测试</button>
+            <button class="btn" data-action="home" type="button">回到首页</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
+
